@@ -1,0 +1,10 @@
+eclipse.preferences.version=1
+encoding//src/main/java/ebills/tools/excel/service/ReportExtendInterface.java=UTF-8
+encoding//src/main/java/ebills/tools/excel/service/ReportsGeneratorService.java=UTF-8
+encoding//src/main/java/ebills/tools/excel/web/ExcelCreateFormAction.java=UTF-8
+encoding//src/main/java/ebills/tools/util/DatabaseCreator.java=UTF-8
+encoding//src/main/java/ebills/tools/util/Page.java=UTF-8
+encoding//src/main/java/ebills/tools/util/PropertiesUtils.java=UTF-8
+encoding//src/main/java/ebills/tools/util/Response.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/excel/index.jsp=UTF-8
+encoding/<project>=UTF-8
