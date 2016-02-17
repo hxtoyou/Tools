@@ -5,9 +5,9 @@
     <div class="navbar-header">
       <a id="home" class="navbar-brand" style="padding-left:50px;" href="/login">Home</a> 
       <a id="excel" class="navbar-brand" style="padding-left:50px;" href="/excel/createForm">Excel</a> 
-       <a id="excel" class="navbar-brand"  href="/echart/index">Charts</a> 
+      <!--  <a id="excel" class="navbar-brand"  href="/echart/index">Charts</a> 
       <a class="navbar-brand" href="#">Tools</a>
-      <a class="navbar-brand" href="#">Other</a>
+      <a class="navbar-brand" href="#">Other</a> -->
     
     </div>
 

@@ -31,10 +31,7 @@
 		<div class="" align="center" id="content"></div>
 		<div  align="center" id="statisticContent"></div>
 	</div>
-	<div class="easyui-dialog" title="" id="dialog" data-options="iconCls:'icon-search'" style="overflow-x:hidden;overflow-y:auto;" flt=true>
-		<form id='form' class="commQueryCondWrap">	
-		</form>
-	</div>
+
 	<div id="win"></div> 
 	<div id="message"></div>
 </body>

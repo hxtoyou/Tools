@@ -44,7 +44,7 @@ public class ExcelExportAction{
 		Map<String,String> req = CommonUtil.getParametersMap(httpServletRequest);
 		Map<String,Object> context = new HashMap<String,Object>();
 		context.putAll(req);
-		genaratorService.export(context);
+		genaratorService.export(context,response);
 		return new Response();
 	}
 }

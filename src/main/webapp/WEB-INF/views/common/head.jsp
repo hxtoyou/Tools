@@ -8,6 +8,10 @@
 <meta http-equiv="X-UA-Compatible" content="IE=Edge">
 <meta charset="UTF-8">
 <link href="${resources}/scripts/spm_modules/bootstrap/3.3.1/css/bootstrap.css" rel="stylesheet">
+<link href="${resources}/scripts/spm_modules/bootstrap/dialog/css/bootstrap-dialog.min.css" rel="stylesheet">
+<link href="${resources}/scripts/spm_modules/bootstrap/grid/jquery.bootgrid.min.css" rel="stylesheet">
+<link href="${resources}/scripts/spm_modules/bootstrap/fileInput/fileinput.css" rel="stylesheet">
+<link href="${resources}/scripts/spm_modules/bootstrap/date/bootstrap-datepicker.css" rel="stylesheet">
 <link href="${resources}/scripts/spm_modules/jquery-ui/1.11.1/jquery-ui.css" rel="stylesheet">
 
 <script src="${resources}/scripts/spm_modules/seajs/2.3.0/dist/sea.js" type="text/javascript"></script>
@@ -24,13 +28,18 @@
 		alias : {
 	      'jquery'    : '${resources}/scripts/spm_modules/jquery/2.1.4/jquery',
 	      'bootstrap' : '${resources}/scripts/spm_modules/bootstrap/3.3.1/js/bootstrap',
-	      'jquery-ui' : '${resources}/scripts/spm_modules/jquery-ui/1.11.1/jquery-ui.js',
+	      'bootstrapDialog' : '${resources}/scripts/spm_modules/bootstrap/dialog/js/bootstrap-dialog',
+	      'bootstrapGrid' : '${resources}/scripts/spm_modules/bootstrap/grid/jquery.bootgrid',
+	      'fileinput' : '${resources}/scripts/spm_modules/bootstrap/fileInput/fileinput',
+	      'datepicker' : '${resources}/scripts/spm_modules/bootstrap/date/bootstrap-datepicker',
+	      'fileLocale' : '${resources}/scripts/spm_modules/bootstrap/fileInput/fileinput_locale_zh',
 	      'echarts'   : '${resources}/scripts/spm_modules/echarts/3.0.0/echarts.common.min.js'
 		},
 		vars: {
-			'locale': 'zh-cn'
+			'locale': 'zh'
 		},
 		debug: true,
 		charset: 'utf-8'
 	});
+	
 </script>

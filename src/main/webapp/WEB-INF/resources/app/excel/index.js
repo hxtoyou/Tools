@@ -1,7 +1,9 @@
 define(function(require,exports,module){
 	// var contextData = '${context.user}';
 	var $ = require("jquery");
-	require("jquery-ui")($);
+	var bootstrapGrid = require("bootstrapGrid");
+	var bootstrapDialog = require("bootstrapDialog");
+	require('datepicker')($);
 	var data = JSON.parse(contextData);
 	var validateForm = require("excel/excelValidate");
 	var html = "";
@@ -21,6 +23,7 @@ define(function(require,exports,module){
 	var isLoad=false;
 	var colMap = new Object();
 	var spanRows='';
+	var dialog;
 	createForm(data, validateFile);
 	/**
 	 *提交查询
@@ -94,7 +97,6 @@ define(function(require,exports,module){
 				data = JSON.parse(data);
 				totalPage = data.totalCount;
 				var contentHtml = "";
-				$('#dialog').dialog('close');
 				if (type === "detail") {
 					generateHtml(contentHtml, "content", data, titleLines,spanRows);
 					if (contentPagination === "YES") {
@@ -149,6 +151,8 @@ define(function(require,exports,module){
 	 *导出
 	 **/
 	$("#export").click(function() {
+		console.log("11");
+		var isopen = window.open("/excel/export?templateType=" + type + "&templateName=" + filePath + "&" + param, "_self");
 		if ($("#export").hasClass("bbdc_disabled")) {
 			$.messager.alert($xcp.i18n('sys.tip'), $xcp.i18n('excel.exportTip'));
 			return false;
@@ -351,7 +355,7 @@ define(function(require,exports,module){
 	 *弹出查询窗口
 	 **/
 	$("#query").click(function() {
-		$('#dialog').dialog('open');
+		dialog.open();
 	});
 	/**
 	 *分页控件
@@ -360,32 +364,32 @@ define(function(require,exports,module){
 		if ($("#" + id).hasClass("display_1")) {
 			$("#" + id).removeClass("display_1");
 		}
-		$("#" + id).pagination({
-			total: totalPage,
-			// pageSize:5 ,
-			pageList: [1, 3, 5, 10, 15, 20],
-			onSelectPage: function(pageNumber, pageSize) {
+		// $("#" + id).pagination({
+		// 	total: totalPage,
+		// 	// pageSize:5 ,
+		// 	pageList: [1, 3, 5, 10, 15, 20],
+		// 	onSelectPage: function(pageNumber, pageSize) {
 
-				if (id === "pp") {
-					statisticPageNum = pageNumber;
-					statisticPageSize = pageSize;
-					getData(statisticPageNum, statisticPageSize,spanRows);
-				} else if (id === "pps") {
-					me.pageNum = pageNumber;
-					me.pageSize = pageSize;
-					getStatisticData(spanRows);
-				}
-				$(this).pagination('loading');
-				// alert('pageNumber:'+pageNumber+',pageSize:'+pageSize);
-				$(this).pagination('loaded');
-			},
-			onChangePageSize: function(pageSize) {
-				statisticPageSize = pageSize;
-				// getData(statisticPageNum, statisticPageSize);
-			}
-		});
+		// 		if (id === "pp") {
+		// 			statisticPageNum = pageNumber;
+		// 			statisticPageSize = pageSize;
+		// 			getData(statisticPageNum, statisticPageSize,spanRows);
+		// 		} else if (id === "pps") {
+		// 			me.pageNum = pageNumber;
+		// 			me.pageSize = pageSize;
+		// 			getStatisticData(spanRows);
+		// 		}
+		// 		$(this).pagination('loading');
+		// 		// alert('pageNumber:'+pageNumber+',pageSize:'+pageSize);
+		// 		$(this).pagination('loaded');
+		// 	},
+		// 	onChangePageSize: function(pageSize) {
+		// 		statisticPageSize = pageSize;
+		// 		// getData(statisticPageNum, statisticPageSize);
+		// 	}
+		// });
 		// $('#pp').css("width", tableWidth + "px");
-		$.parser.parse("#" + id);
+		// $.parser.parse("#" + id);
 	}
 
 
@@ -393,87 +397,95 @@ define(function(require,exports,module){
 	 *根据后台传回数据生成查询窗口
 	 **/
 	function createForm(data, validateFile) {
-		$("#form").html(html);
-		var map = validateForm.generatePage;
-		html += "<table class='table_tc'  border='0'>";
-		var isRequird;
-		for (var i = 0; i <= data.length / 2; i++) {
-			html += "<tr>";
-			if (i * 2 < data.length) {
-				var value = data[i * 2];
+		html+='<div style="diaplay:none;" id="dialog"><form id="form" class="commQueryCondWrap">';
+		
+		for (var i = 0; i < data.length; i++) {
+			console.log(data[i]);
+				var value = data[i];
+				var label  = value.name;
 				var name = value.varName;
-				name = name.trim();
-				if (!(name in map)) {
-					if (value.dataOption === 'YES') {
-						isRequird = " easyui-validatebox M";
-					} else {
-						isRequird = " easyui-validatebox";
-					}
-					html += "<td class='bzh'>" + value.name + ":</td>";
-					if (value.comboAttr == "") {
-						html += "<td><input id='" + value.varName + "' class='tc_input " + value.classType + isRequird + " ' name='" + name + "'></td>";
-					} else {
-						html += "<div class='input'><td><input id='" + value.varName + "' class='tc_input " + value.classType + isRequird+" ' name='" + name + "' " + "data-options=valueField:'val',textField:'name',data:$xcp.getConstant('" + value.comboAttr + "'),></input></td>"
-					}
-				} else {
-					html += map[name];
-				}
-			}
-			if ((i * 2 + 1) < data.length) {
-				var value = data[i * 2 + 1];
-				var name = value.varName || "";
-				name = name.trim();
-				if (!(name in map)) {
-					if (value.dataOption === 'YES') {
-						isRequird = " easyui-validatebox M";
-					} else {
-						isRequird = " easyui-validatebox";
-					}
-					html += "<td class='bzh'>" + value.name + ":</td>";
-					if (value.comboAttr == "") {
-						html += "<td><input id='" + value.varName+ "' class='tc_input " + value.classType +isRequird + " ' name='" + name + "'></td>";
-					} else {
-						html += "<td><input id='" + value.varName+"' class='tc_input " + value.classType + isRequird+" ' name='" + name + "' " + "data-options=valueField:'val',textField:'name',data:$xcp.getConstant('" + value.comboAttr + "'),></input></td>"
-					}
-				} else {
-					html += map[name];
-				}
-			}
-			html += "</tr>";
-		};
+				var classtype = value.classType;
+				html+='<div class="form-group">'+
+					    '<label for="exampleInputEmail1">'+label+'</label>'+
+					    '<input type="input" class="form-control '+classtype+'" name="'+name+'" id="exampleInputEmail1" placeholder="Email">'+
+					  '</div>';
+
+		}
+		html+='</form></div>';
+		$(html).appendTo('body');
+		// var map = validateForm.generatePage;
+		// html += "<table class='table_tc'  border='0'>";
+		// var isRequird;
+		// for (var i = 0; i <= data.length / 2; i++) {
+		// 	html += "<tr>";
+		// 	if (i * 2 < data.length) {
+		// 		var value = data[i * 2];
+		// 		var name = value.varName;
+		// 		name = name.trim();
+		// 		if (!(name in map)) {
+		// 			if (value.dataOption === 'YES') {
+		// 				isRequird = " easyui-validatebox M";
+		// 			} else {
+		// 				isRequird = " easyui-validatebox";
+		// 			}
+		// 			html += "<td class='bzh'>" + value.name + ":</td>";
+		// 			if (value.comboAttr == "") {
+		// 				html += "<td><input id='" + value.varName + "' class='tc_input " + value.classType + isRequird + " ' name='" + name + "'></td>";
+		// 			} else {
+		// 				html += "<div class='input'><td><input id='" + value.varName + "' class='tc_input " + value.classType + isRequird+" ' name='" + name + "' " + "data-options=valueField:'val',textField:'name',data:$xcp.getConstant('" + value.comboAttr + "'),></input></td>"
+		// 			}
+		// 		} else {
+		// 			html += map[name];
+		// 		}
+		// 	}
+		// 	if ((i * 2 + 1) < data.length) {
+		// 		var value = data[i * 2 + 1];
+		// 		var name = value.varName || "";
+		// 		name = name.trim();
+		// 		if (!(name in map)) {
+		// 			if (value.dataOption === 'YES') {
+		// 				isRequird = " easyui-validatebox M";
+		// 			} else {
+		// 				isRequird = " easyui-validatebox";
+		// 			}
+		// 			html += "<td class='bzh'>" + value.name + ":</td>";
+		// 			if (value.comboAttr == "") {
+		// 				html += "<td><input id='" + value.varName+ "' class='tc_input " + value.classType +isRequird + " ' name='" + name + "'></td>";
+		// 			} else {
+		// 				html += "<td><input id='" + value.varName+"' class='tc_input " + value.classType + isRequird+" ' name='" + name + "' " + "data-options=valueField:'val',textField:'name',data:$xcp.getConstant('" + value.comboAttr + "'),></input></td>"
+		// 			}
+		// 		} else {
+		// 			html += map[name];
+		// 		}
+		// 	}
+		// 	html += "</tr>";
+		// };
 		
-		html += "</table>";
-		var lines = Math.ceil(data.length / 2);
-		var height = (lines + 3) * 41;
+		// html += "</table>";
+		// var lines = Math.ceil(data.length / 2);
+		// var height = (lines + 3) * 41;
 		
-		$("#form").html(html);
-		console.log("html",html);
-		$("#dialog").dialog({
-			title: formName,
-			width: 550,
-			height: height,
-			closed: false,
-			cache: false,
-			modal: true,
-			shadow: true,
-			buttons: [{
-				text: "查询",
-				iconCls: 'icon-search',
-				// id: "submit"
-				click: function() {
-					submit();
-                  $( this ).dialog( "close" );
+		console.log("html",$("#dialog").html());
+		dialog = bootstrapDialog.show({
+			message : $("#dialog").html(),
+			 buttons: [{
+                label: 'SUBMIT',
+                cssClass: 'btn-primary',
+                action: function(bootstrapDialog){
+                	bootstrapDialog.close();
+                    submit();
                 }
-			}],
-			onClose: function() {
-				if(isLoad===false){
-					// $xcp.formPubMgr.formBack();
-				}
-				
-			}
+            }, {
+                label: 'Close',
+                action: function(dialogItself){
+                    dialogItself.close();
+                }
+            }]
 		});
-		$('#dialog').dialog('open');
-		// $.parser.parse("#dialog");
+		$('input.easyui-datebox').datepicker({
+			format: 'yyyy-mm-dd'
+		});
+	
 		validateForm.init;
 
 	}

@@ -1,5 +1,8 @@
 package ebills.tools.excel.service;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -177,5 +180,28 @@ public class ReportsUtil {
 			}
 		}
 		return paramValues;
+	}
+	public static Date paraseDate(String dstr){
+		java.sql.Date date = null;
+		if(!Strings.isNullOrEmpty(dstr)){
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟  
+			try {
+				java.util.Date date2=sdf.parse(dstr);
+				date = new java.sql.Date(date2.getTime());
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				date = null;
+				e.printStackTrace();
+			} 
+			
+		}
+		return date;
+	}
+	public static Double paraseDouble(String dstr){
+		Double re = 0d;
+		if(!Strings.isNullOrEmpty(dstr)){
+			re = Double.parseDouble(dstr);
+		}
+		return re;
 	}
 }

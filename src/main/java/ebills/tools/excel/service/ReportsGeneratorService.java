@@ -638,8 +638,7 @@ public class ReportsGeneratorService implements ReportsGenerator<Map<String,Obje
 	}
 	
 	@Override	
-	public void export(Map<String,Object> context) throws Exception {
-		response = ((ServletWebRequest)RequestContextHolder.getRequestAttributes()).getResponse();
+	public void export(Map<String,Object> context,HttpServletResponse response) throws Exception {
 		String fileName = request.getParameter("templateName");// 模板名称
 		Workbook workbook = ExcelToHtmlUtil.getExcelWorkBook(fileName);
 		/**
