@@ -74,7 +74,7 @@
 	</listener>
 
 	<!-- Spring MVC DispatcherServlet -->
-	<servlet>
+	<!-- <servlet>
 		<servlet-name>DispatcherServlet</servlet-name>
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
@@ -87,8 +87,30 @@
 	<servlet-mapping>
 		<servlet-name>DispatcherServlet</servlet-name>
 		<url-pattern>/</url-pattern>
+	</servlet-mapping> -->
+	<!-- CXF begin -->
+	<servlet>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/ws/*</url-pattern>
 	</servlet-mapping>
-
+	
+	<servlet>
+    	        <servlet-name>jaxws-servlet</servlet-name>
+    	       <servlet-class>
+    		          com.sun.xml.ws.transport.http.servlet.WSSpringServlet
+    	        </servlet-class>
+  	</servlet>
+	
+	<servlet-mapping>
+                <servlet-name>jaxws-servlet</servlet-name>
+                <url-pattern>/hello</url-pattern>
+    </servlet-mapping>
+	<!-- CXF end -->
 	<!-- session超时定义,单位为分钟 -->
 	<session-config>
 		<session-timeout>30</session-timeout>

@@ -465,12 +465,13 @@ public class ExcelParaseService {
 		Map<String,Integer> projectParams = Maps.newHashMap();
 		projectParams.put("totalColumn", 59);//总列数-从0开始计数
 		projectParams.put("start", 1);//数据启始行--从0开始计数
-		projectParams.put("end", 8);//数据结束行
 		projectParams.put("title", 1);//标题行
 		projectParams.put("key", 5);//projectId所在列数--从0开始计数
 		String projectFilePath = FileUploadUtil.uploadPath+File.separator+path;
 		Workbook workbook = ExcelToHtmlUtil.getExcelWorkBook(projectFilePath);
 		Sheet sheet= workbook.getSheetAt(0);
+		Integer rowNum = sheet.getLastRowNum();
+		projectParams.put("end", rowNum);
 		ParaseData paraseData =  new ParaseProjectData();
 		Map<String,List<Map<String,String>>> projectresult = paraseData.getData(projectParams, sheet);
 		return projectresult;
@@ -478,14 +479,15 @@ public class ExcelParaseService {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	private  Map<String,List<Map<String,String>>> getMilepostData(String path){
 		Map<String,Integer> milepostParams = Maps.newHashMap();
-		milepostParams.put("totalColumn", 28);
-		milepostParams.put("start", 1);
-		milepostParams.put("end", 7);
-		milepostParams.put("title", 1);
-		milepostParams.put("key", 3);
 		String projectFilePath = FileUploadUtil.uploadPath+File.separator+path;
 		Workbook workbook = ExcelToHtmlUtil.getExcelWorkBook(projectFilePath);
 		Sheet sheet= workbook.getSheetAt(1);
+		Integer rowNum = sheet.getLastRowNum();
+		milepostParams.put("totalColumn", 28);
+		milepostParams.put("start", 1);
+		milepostParams.put("end", rowNum);
+		milepostParams.put("title", 1);
+		milepostParams.put("key", 3);
 		ParaseData paraseData = new ParaseMilePostData();
 		Map<String,List<Map<String,String>>> milepostResult = paraseData.getData(milepostParams, sheet);
 		return milepostResult;
@@ -495,12 +497,14 @@ public class ExcelParaseService {
 		Map<String,Integer> invoiceParams = Maps.newHashMap();
 		invoiceParams.put("totalColumn", 12);
 		invoiceParams.put("start", 1);
-		invoiceParams.put("end", 28);
+		
 		invoiceParams.put("title", 1);
 		invoiceParams.put("key", 1);
 		String projectFilePath = FileUploadUtil.uploadPath+File.separator+path;
 		Workbook workbook = ExcelToHtmlUtil.getExcelWorkBook(projectFilePath);
 		Sheet sheet= workbook.getSheetAt(1);
+		Integer rowNum = sheet.getLastRowNum();
+		invoiceParams.put("end", rowNum);
 		ParaseData paraseData = new ParaseInvoiceData();
 		Map<String,List<Map<String,String>>> invoiceResult = paraseData.getData(invoiceParams, sheet);
 		return invoiceResult;
@@ -510,12 +514,13 @@ public class ExcelParaseService {
 		Map<String,Integer> collectionParams = Maps.newHashMap();
 		collectionParams.put("totalColumn", 12);
 		collectionParams.put("start", 1);
-		collectionParams.put("end", 52);
 		collectionParams.put("title", 1);
 		collectionParams.put("key", 1);
 		String projectFilePath = FileUploadUtil.uploadPath+File.separator+path;
 		Workbook workbook = ExcelToHtmlUtil.getExcelWorkBook(projectFilePath);
 		Sheet sheet= workbook.getSheetAt(0);
+		Integer rowNum = sheet.getLastRowNum();
+		collectionParams.put("end", rowNum);
 		ParaseData paraseData = new ParaseCollectionData();
 		Map<String,List<Map<String,String>>> collectionResult = paraseData.getData(collectionParams, sheet);
 		return collectionResult;

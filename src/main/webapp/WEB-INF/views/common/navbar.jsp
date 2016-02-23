@@ -8,7 +8,7 @@
       <!--  <a id="excel" class="navbar-brand"  href="/echart/index">Charts</a> 
       <a class="navbar-brand" href="#">Tools</a>
       <a class="navbar-brand" href="#">Other</a> -->
-    
+      <a id="cxf" class="navbar-brand" style="padding-left:50px;" href="/cxf/index">CFX</a> 
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->

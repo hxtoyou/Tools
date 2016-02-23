@@ -1,19 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:context="http://www.springframework.org/schema/context"
-	  xmlns:websocket="http://www.springframework.org/schema/websocket"
-	xsi:schemaLocation="
+<beans 	xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:mvc="http://www.springframework.org/schema/mvc" 
+		xmlns:context="http://www.springframework.org/schema/context"
+	    xmlns:jaxws="http://cxf.apache.org/jaxws"
+    	xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+    	xmlns:ws="http://jax-ws.dev.java.net/spring/core"
+       	xmlns:wss="http://jax-ws.dev.java.net/spring/servlet"
+	 	xmlns:websocket="http://www.springframework.org/schema/websocket"
+		xsi:schemaLocation="
 		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+        http://cxf.apache.org/jaxws 
+		http://cxf.apache.org/schemas/jaxws.xsd 
+		http://cxf.apache.org/jaxrs 
+     	http://cxf.apache.org/schemas/jaxrs.xsd
+     	http://jax-ws.dev.java.net/spring/core
+        http://jax-ws.dev.java.net/spring/core.xsd
+        http://jax-ws.dev.java.net/spring/servlet
+        http://jax-ws.dev.java.net/spring/servlet.xsd
         http://www.springframework.org/schema/websocket
         http://www.springframework.org/schema/websocket/spring-websocket.xsd">
-
-	<description>MVC配置</description>
+		
 
 	<context:component-scan base-package="ebills.tools" use-default-filters="false">
 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
+	
+	<wss:binding url="/hello">
+        <wss:service>
+            <ws:service bean="#helloWs"/>
+        </wss:service>
+    </wss:binding>
+
+    <!-- Web service methods -->
+    <bean id="helloWs" class="ebills.tools.webService.jax_ws.HelloWorldWS">
+    	<property name="helloWorldBo" ref="HelloWorldBo" />
+    </bean>
+    
+    <bean id="HelloWorldBo" class="ebills.tools.webService.jax_ws.HelloWorldBoImpl" />
+    
+	<bean id="inMessageInterceptor" class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+	<bean id="outMessageInterceptor" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
+	<bean id="logInbound" class="org.apache.cxf.interceptor.LoggingInInterceptor"/>
+    <bean id="logOutbound" class="org.apache.cxf.interceptor.LoggingOutInterceptor"/>
+	<bean id="regUser" class="ebills.tools.webService.cxf.UserInfoController"></bean>
 	<!-- 配置本地化资源位置 -->
 	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<!-- 多国际化资源文件 -->
@@ -45,8 +77,48 @@
 	<bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver">
 		<property name="defaultLocale" value="zh" />
 	</bean>
-
- 
+	     <!-- 亦可在 jaxrs:server 内配置jaxrs:inInterceptors 拦截器，如下边注释掉的-->
+    <bean id="cxf" class="org.apache.cxf.bus.spring.SpringBus">
+        <property name="inInterceptors">
+            <list>
+                <ref bean="logInbound"/>
+            </list>
+        </property>
+        <property name="outInterceptors">
+            <list>
+                <ref bean="logOutbound"/>
+            </list>
+        </property>
+        <property name="outFaultInterceptors">
+            <list>
+                <ref bean="logOutbound"/>
+            </list>
+        </property>
+        <property name="inFaultInterceptors">
+            <list>
+                <ref bean="logInbound"/>
+            </list>
+        </property>
+    </bean> 
+ 	<jaxrs:server id="restfulServer" address="/restful">
+		<jaxrs:serviceBeans>
+			<ref bean="regUser" />
+		</jaxrs:serviceBeans>
+		<!-- <jaxrs:providers>
+		
+		</jaxrs:providers> -->
+		<!-- 亦可定义 SpringBus 如上-->
+		<!-- <jaxrs:inInterceptors>
+		   <ref bean="inMessageInterceptor"/>
+		</jaxrs:inInterceptors>
+		<jaxrs:outInterceptors>
+		    <ref bean="outMessageInterceptor"/>
+		</jaxrs:outInterceptors>-->
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json" />
+			<entry key="xml" value="application/xml" />
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
 
  
 	<!-- 采用注解定义配置 -->
